@@ -87,6 +87,9 @@ public class ReturnEmptyArrayNotNullCheck extends IssuableSubscriptionVisitor {
     "TreeSet",
     "Vector");
 
+  private static final Set<String> REQUIRES_RETURN_NULL = ImmutableSet.of(
+    "org.springframework.batch.item.ItemProcessor");
+
   private final Deque<Returns> returnType = new LinkedList<>();
 
   private enum Returns {
@@ -170,6 +173,6 @@ public class ReturnEmptyArrayNotNullCheck extends IssuableSubscriptionVisitor {
         return true;
       }
     }
-    return false;
+    return REQUIRES_RETURN_NULL.stream().anyMatch(methodTree.symbol().owner().type()::isSubtypeOf);
   }
 }
